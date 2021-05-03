@@ -71,6 +71,12 @@ app.post('/send', (req, res) => {
     return;
   }
 
+
+  if (balances[sender] - amount < 0) {
+    console.log("INSUFFICIENT FUNDS");
+    return;
+  }
+
   balances[sender] -= amount;
   balances[recipient] = (balances[recipient] || 0) + +amount;
   res.send({ balance: balances[sender] });
