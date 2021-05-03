@@ -50,15 +50,22 @@ app.post('/send', (req, res) => {
 
   // check if we were sent a valid private key
   if (!privTable[privateKey]) {
-    printBalances();
     console.log("INVALID PRIVATE KEY");
     return;
   }
 
   const key = privTable[privateKey];
+
+  // check if the private key matches the public key
+  if (sender != key.getPublic().encode('hex')) {
+    console.log("PRIVATE KEY DOES NOT MATCH PUBLIC KEY");
+    return;
+  }
+
   const signature = key.sign(amount.toString);
   const derSign = signature.toDER();
 
+  // TODO: THIS DOES NOT WORK :)
   console.log(key.verify(amount, derSign));
 
   balances[sender] -= amount;
