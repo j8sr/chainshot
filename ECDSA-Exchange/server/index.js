@@ -23,9 +23,9 @@ for (let i = 0; i < 3; i++) {
     publicKeys[i] = keys[i].getPublic().encode('hex');
 
     // make lookup table from toString private key to true private keys
-    privTable[keys[i].getPrivate().toString()] = keys[i];
+    privTable[keys[i].getPrivate().toString(16)] = keys[i];
 
-    console.log("Public: " + publicKeys[i] + "\nPrivate: " + keys[i].getPrivate().toString() + "\n");
+    console.log("Public: " + publicKeys[i] + "\nPrivate: " + keys[i].getPrivate().toString(16) + "\n");
 }
 
 const balances = {};
@@ -62,11 +62,14 @@ app.post('/send', (req, res) => {
     return;
   }
 
-  const signature = key.sign(amount.toString);
+  const signature = key.sign(amount.toString());
   const derSign = signature.toDER();
 
-  // TODO: THIS DOES NOT WORK :)
-  console.log(key.verify(amount, derSign));
+  // check if this successfully can sign the ammount
+  if (!key.verify(amount.toString(), derSign)) {
+    console.log("FAILED TO SUCCESSFULLY SIGN");
+    return;
+  }
 
   balances[sender] -= amount;
   balances[recipient] = (balances[recipient] || 0) + +amount;
