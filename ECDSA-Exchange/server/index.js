@@ -12,20 +12,19 @@ const ec = new EC('secp256k1');
 app.use(cors());
 app.use(express.json());
 
-const keys = [];
 const publicKeys = [];
 const privTable = [];
 
 for (let i = 0; i < 3; i++) {
-    keys[i] = ec.genKeyPair();
+    const key = ec.genKeyPair();
 
     // encode the entire public key as a hexadecimal string
-    publicKeys[i] = keys[i].getPublic().encode('hex');
+    publicKeys[i] = key.getPublic().encode('hex');
 
     // make lookup table from toString private key to true private keys
-    privTable[keys[i].getPrivate().toString(16)] = keys[i];
+    privTable[key.getPrivate().toString(16)] = key;
 
-    console.log("Public: " + publicKeys[i] + "\nPrivate: " + keys[i].getPrivate().toString(16) + "\n");
+    console.log("Public: " + publicKeys[i] + "\nPrivate: " + key.getPrivate().toString(16) + "\n");
 }
 
 const balances = {};
