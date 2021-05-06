@@ -5,13 +5,6 @@ import re
 from walletgen import generate_wallet
 
 
-def contains_no_letters(string):
-    """
-    checks if there are any letters in a string
-    """
-    return not re.search("[a-zA-Z]", string)
-
-
 def get_wallet():
     """
     gets wallet from the wallet generator
@@ -31,7 +24,7 @@ def main():
         wallet = get_wallet()
 
         # check for no letters
-        if contains_no_letters(wallet[2].hex()):
+        if wallet[2].hex().isnumeric():
             print(f"Found a wallet without letters after {count} tries!!!!\
                     \npriv: {wallet[0].hex()}\npub:  {wallet[1].hex()}\
                     \naddr: {wallet[2].hex()}")
